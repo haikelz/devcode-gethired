@@ -1,26 +1,41 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAtom, useSetAtom } from "jotai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { tw } from "../../lib/helpers/tw";
-import { deleteData } from "../../lib/utils/axiosConfig";
+import { tw } from "../../../lib/helpers";
+import { getData } from "../../../lib/utils/axiosConfig";
+import {
+  isEditTodoAtom,
+  isOpenAddModalAtom,
+  isOpenDeleteModalAtom,
+  newTodoAtom,
+  todoIdAtom,
+  todoTitleAtom,
+} from "../../../store";
 
-export default function TodoItem({ item, priority }) {
+export function TodoItem({ item, priority }) {
   const { id, title, activity_group_id } = item;
 
-  async function deleteTodo(id) {
-    await deleteData(`/todo-items/${id}`);
+  const [todoTitle, setTodoTitle] = useAtom(todoTitleAtom);
+  const [todoId, setTodoId] = useAtom(todoIdAtom);
+  const [newTodo, setNewTodo] = useAtom(newTodoAtom);
+  const [isEditTodo, setIsEditTodo] = useAtom(isEditTodoAtom);
+  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
+    useAtom(isOpenAddModalAtom);
+
+  const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
+
+  function handleDelete() {
+    setTodoTitle(title);
+    setTodoId(id);
+    setIsOpenDeleteModal(true);
   }
 
-  const queryClient = useQueryClient();
+  async function handleClick() {
+    const response = await getData(`/todo-items/${id}`);
+    setNewTodo(response);
 
-  const deleteTodoMutation = useMutation({
-    mutationFn: deleteTodo,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: activity_group_id });
-    },
-  });
-
-  function handleDelete(id) {
-    deleteTodoMutation.mutateAsync(id);
+    setIsOpenAddTodoModal(true);
+    setTodoId(id);
+    setIsEditTodo(true);
   }
 
   return (
@@ -51,6 +66,7 @@ export default function TodoItem({ item, priority }) {
               data-cy="todo-item-edit-button"
               type="button"
               aria-label="todo item edit button"
+              onClick={() => handleClick()}
             >
               <LazyLoadImage src="/assets/pencil.svg" alt="todo item edit" />
             </button>

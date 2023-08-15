@@ -4,46 +4,47 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import ErrorWhileFetch from "../components/ErrorWhileFetch";
 import Loading from "../components/Loading";
-import { Button } from "../components/ui/Button";
-import TodoItem from "../components/ui/TodoItem";
-import { DeleteConfirmModal } from "../components/ui/modal";
-import { useFetch } from "../hooks";
-import { tw } from "../lib/helpers/tw";
-import { patchData, postData } from "../lib/utils/axiosConfig";
 import {
-  isEditAtom,
-  isOpenModalAtom,
-  isOpenModalDeleteAtom,
-  titleAtom,
-  todoAtom,
+  AddTodoModal,
+  Button,
+  ConfirmDeleteModal,
+  InformationModal,
+  TodoItem,
+} from "../components/ui";
+import { useFetch } from "../hooks";
+import { tw } from "../lib/helpers";
+import { deleteData, patchData, postData } from "../lib/utils/axiosConfig";
+import {
+  activityTitleAtom,
+  isDeleteAtom,
+  isEditActivityTitleAtom,
+  isEditTodoAtom,
+  isOpenAddModalAtom,
+  isOpenDeleteModalAtom,
+  isSortAtom,
+  newTodoAtom,
+  todoIdAtom,
+  todoTitleAtom,
 } from "../store";
 
-const priorityOptions = [
-  {
-    id: 1,
-    priority: "very-high",
-  },
-  {
-    id: 2,
-    priority: "high",
-  },
-  {
-    id: 3,
-    priority: "normal",
-  },
-  {
-    id: 4,
-    priority: "low",
-  },
-];
-
 export default function Detail() {
-  const [isOpenModal, setIsOpenModal] = useAtom(isOpenModalAtom);
-  const [isEdit, setIsEdit] = useAtom(isEditAtom);
-  const [newTodo, setNewTodo] = useAtom(todoAtom);
+  const [newTodo, setNewTodo] = useAtom(newTodoAtom);
+  const [isSort, setIsSort] = useAtom(isSortAtom);
+  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
+    useAtom(isOpenAddModalAtom);
+  const [isEditActivityTitle, setIsEditActivityTitle] = useAtom(
+    isEditActivityTitleAtom
+  );
+  const [todoId, setTodoId] = useAtom(todoIdAtom);
+  const [isEditTodo, setIsEditTodo] = useAtom(isEditTodoAtom);
+  const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
 
-  const isOpenModalDelete = useAtomValue(isOpenModalDeleteAtom);
-  const setActivityTitle = useSetAtom(titleAtom);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
+    isOpenDeleteModalAtom
+  );
+
+  const todoTitle = useAtomValue(todoTitleAtom);
+  const setActivityTitle = useSetAtom(activityTitleAtom);
 
   const { id } = useParams();
   const { data, isLoading, isError } = useFetch([id], `/activity-groups/${id}`);
@@ -75,7 +76,8 @@ export default function Detail() {
       _comment: newTodo._comment,
     });
 
-    setIsOpenModal(false);
+    setIsOpenAddTodoModal(false);
+    setNewTodo({ activity_group_id: null, title: "", _comment: "" });
   }
 
   async function editTodo(config) {
@@ -92,6 +94,28 @@ export default function Detail() {
   function handleEdit(value) {
     setActivityTitle(value);
     editTodoMutation.mutate({ title: value });
+  }
+
+  async function deleteTodo() {
+    await deleteData(`/todo-items/${todoId}`);
+  }
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: todoId });
+    },
+  });
+
+  function handleDelete() {
+    deleteTodoMutation.mutate(todoId);
+    setIsOpenDeleteModal(false);
+
+    setIsDelete(true);
+
+    setTimeout(() => {
+      setIsDelete(false);
+    }, 1500);
   }
 
   if (isLoading) return <Loading />;
@@ -114,7 +138,7 @@ export default function Detail() {
               </button>
             </Link>
             <div className="flex justify-center items-center ml-5">
-              {isEdit ? (
+              {isEditActivityTitle ? (
                 <input
                   className="bg-none bg-transparent"
                   type="text"
@@ -131,7 +155,7 @@ export default function Detail() {
                 type="button"
                 aria-label="todo title edit button"
                 className="ml-5"
-                onClick={() => setIsEdit(!isEdit)}
+                onClick={() => setIsEditActivityTitle(!isEditActivityTitle)}
               >
                 <LazyLoadImage src="/assets/pencil.svg" alt="pencil" />
               </button>
@@ -147,6 +171,7 @@ export default function Detail() {
                 "rounded-full w-[54px] h-[54px]",
                 "flex justify-center items-center"
               )}
+              onClick={() => setIsSort(!isSort)}
             >
               <LazyLoadImage src="/assets/arrow-sort.svg" alt="arrow sort" />
             </button>
@@ -157,7 +182,7 @@ export default function Detail() {
                 "font-semibold flex justify-center items-center"
               )}
               label="tambah"
-              onClick={() => setIsOpenModal(true)}
+              onClick={() => setIsOpenAddTodoModal(true)}
             >
               <LazyLoadImage src="/assets/plus.svg" alt="tambah" />{" "}
               <span>Tambah</span>
@@ -187,97 +212,13 @@ export default function Detail() {
           )}
         </div>
       </div>
-      {isOpenModal ? (
-        <div className="flex w-full min-h-screen fixed inset-0 bg-black/20 p-4 justify-center items-center">
-          <div className="bg-white drop-shadow-lg sm:w-[830px] rounded-md">
-            <div className="border-b-2 border-[#E5E5E5]">
-              <div className="flex justify-between items-center p-4">
-                <p data-cy="modal-add-title" className="text-lg font-semibold">
-                  Tambah List Item
-                </p>
-                <button
-                  data-cy="modal-add-close-button "
-                  type="button"
-                  aria-label="close"
-                  onClick={() => setIsOpenModal(false)}
-                  className="hover:bg-slate-100 p-2 rounded-md"
-                >
-                  <LazyLoadImage src="/assets/close.svg" />
-                </button>
-              </div>
-            </div>
-            <div className="border-b-2 border-[#E5E5E5]">
-              <div className="pt-9 pb-4 px-6">
-                <div className="flex flex-col">
-                  <label
-                    data-cy="modal-add-name-title"
-                    className="font-semibold text-xs"
-                  >
-                    NAMA LIST ITEM
-                  </label>
-                  <input
-                    data-cy="modal-add-name-input"
-                    type="text"
-                    className={tw(
-                      "border-2 border-[#E5E5E5] rounded-md px-4 py-2.5 mt-2",
-                      "focus:ring-1 focus:ring-blue-500 focus:border-blue-500",
-                      "placeholder:text-base placeholder:font-normal"
-                    )}
-                    placeholder="Tambahkan nama list item"
-                    onChange={handleChange}
-                    name="title"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col mt-6 w-fit">
-                  <label
-                    htmlFor="priority"
-                    data-cy="modal-add-priority-title"
-                    className="font-semibold text-xs"
-                  >
-                    PRIORITY
-                  </label>
-                  <select
-                    data-cy="modal-add-priority-dropdown"
-                    onChange={handleChange}
-                    name="_comment"
-                    defaultValue="Pilih Priority"
-                    className="mt-2 border-2 border-[#E5E5E5] bg-transparent bg-none rounded-md"
-                    required
-                  >
-                    <option>Pilih Priority</option>
-                    {priorityOptions.map((item) => (
-                      <option
-                        data-cy={`modal-add-priority-${item.priority}`}
-                        key={item.id}
-                        value={item.priority}
-                      >
-                        {item.priority
-                          .split(/[^A-Za-z0-9]/gi)
-                          .map((item) => item[0].toUpperCase() + item.slice(1))
-                          .join(" ")}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end items-center py-4 px-7">
-              <Button
-                data-cy="modal-add-save-button"
-                className={tw(
-                  newTodo.title === "" ? "bg-[#16ABF8]/20" : "bg-[#16ABF8]"
-                )}
-                label="simpan"
-                onClick={handleCreate}
-              >
-                Simpan
-              </Button>
-            </div>
-          </div>
-        </div>
+      {isOpenAddTodoModal ? (
+        <AddTodoModal handleChange={handleChange} handleCreate={handleCreate} />
       ) : null}
-      {isOpenModalDelete ? <DeleteConfirmModal /> : null}
+      {isOpenDeleteModal ? (
+        <ConfirmDeleteModal title={todoTitle} deleteFunc={handleDelete} />
+      ) : null}
+      {isDelete ? <InformationModal /> : null}
     </>
   );
 }

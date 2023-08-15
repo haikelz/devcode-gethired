@@ -2,13 +2,19 @@ import { atom } from "jotai";
 
 export const listActivityAtom = atom([{ id: "", name: "", priority: "" }]);
 export const idAtom = atom(null);
-export const isOpenModalAtom = atom(false);
-export const titleAtom = atom("");
-export const isEditAtom = atom(false);
-export const todoAtom = atom({
-  activity_group_id: "",
+export const activityTitleAtom = atom("");
+export const isEditActivityTitleAtom = atom(false);
+export const newTodoAtom = atom({
+  activity_group_id: null,
   title: "",
   _comment: "",
 });
 
-export const isOpenModalDeleteAtom = atom(false);
+export const isOpenAddModalAtom = atom(false);
+export const isOpenDeleteModalAtom = atom(false);
+export const isSortAtom = atom(false);
+export const isEditTodoAtom = atom(false);
+export const todoIdAtom = atom(null);
+export const activityIdAtom = atom(null);
+export const isDeleteAtom = atom(false);
+export const todoTitleAtom = atom("");

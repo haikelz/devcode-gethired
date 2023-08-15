@@ -1,26 +1,23 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
-import { deleteData } from "../../lib/utils/axiosConfig";
+import {
+  activityIdAtom,
+  activityTitleAtom,
+  isOpenDeleteModalAtom,
+} from "../../../store";
 
-export default function ActivityItem({ item, index }) {
+export function ActivityItem({ item, index }) {
+  const setActivityId = useSetAtom(activityIdAtom);
+  const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
+  const setActivityTitle = useSetAtom(activityTitleAtom);
+
   const { id, title, created_at } = item;
 
-  async function deleteActivity(id) {
-    await deleteData(`/activity-groups/${id}`);
-  }
-
-  const queryClient = useQueryClient();
-
-  const deleteActivityMutation = useMutation({
-    mutationFn: deleteActivity,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: id });
-    },
-  });
-
-  function handleDelete(id) {
-    deleteActivityMutation.mutate(id);
+  function handleClick() {
+    setActivityId(id);
+    setIsOpenDeleteModal(true);
+    setActivityTitle(title);
   }
 
   return (
@@ -49,15 +46,12 @@ export default function ActivityItem({ item, index }) {
             })}
           </p>
           <button
+            data-cy="activity-item-delete-button"
             type="button"
             aria-label="activity item delete button"
-            onClick={() => handleDelete(id)}
+            onClick={handleClick}
           >
-            <LazyLoadImage
-              data-cy="activity-item-delete-button"
-              src="/assets/trash.svg"
-              alt="trash icon"
-            />
+            <LazyLoadImage src="/assets/trash.svg" alt="trash icon" />
           </button>
         </div>
       </div>
