@@ -8,7 +8,6 @@ const axios = Axios.create({
   },
 });
 
-// GET, POST, PATCH, DELETE
 export async function getData(path) {
   const response = await axios.get(path);
   return response.data;
@@ -19,7 +18,7 @@ export async function postData(path, config) {
 }
 
 export async function patchData(path, config) {
-  const response = await axios.patch(path, config);
+  await axios.patch(path, config);
 }
 
 export async function deleteData(path) {

@@ -92,13 +92,32 @@ export function AddTodoModal({ handleChange, handleCreate }) {
               >
                 PRIORITY
               </label>
+              {/** TODO: jangan pake select component */}
+              <button type="button" aria-label="select options">
+                {/*<div
+              data-cy="todo-item-priority-indicator"
+              className={tw(
+                "w-3 h-3 rounded-full",
+                priority === "very-high"
+                  ? "bg-[#ED4C5C]"
+                  : priority === "high"
+                  ? "bg-[#F8A541]"
+                  : priority === "medium"
+                  ? "bg-[#00A790]"
+                  : priority === "low"
+                  ? "bg-[#428BC1]"
+                  : "bg-[#8942C1]"
+              )}
+              ></div>*/}
+                <span>Pilih priority</span>
+              </button>
               <select
                 data-cy="modal-add-priority-dropdown"
                 onChange={handleChange}
                 name="_comment"
                 defaultValue="Pilih Priority"
                 value={newTodo._comment}
-                className="mt-2 border-2 border-[#E5E5E5] bg-transparent bg-none rounded-md"
+                className="mt-2 p-2 border-2 border-[#E5E5E5] bg-transparent bg-none rounded-md"
                 required
               >
                 <option>Pilih Priority</option>

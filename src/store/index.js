@@ -18,3 +18,4 @@ export const todoIdAtom = atom(null);
 export const activityIdAtom = atom(null);
 export const isDeleteAtom = atom(false);
 export const todoTitleAtom = atom("");
+export const isTodoDoneAtom = atom(false);

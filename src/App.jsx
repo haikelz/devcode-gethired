@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import NotFoundPage from "./pages/404";
 import Details from "./pages/Details";
 import Home from "./pages/Home";
+import TestingPage from "./pages/TestingPage";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/details/:id" element={<Details />} />
+                <Route path="/testing" element={<TestingPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Layout>

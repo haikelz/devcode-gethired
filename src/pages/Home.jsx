@@ -20,13 +20,12 @@ import {
 } from "../store";
 
 export default function Home() {
-  const activityId = useAtomValue(activityIdAtom);
-
   const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
     isOpenDeleteModalAtom
   );
 
+  const activityId = useAtomValue(activityIdAtom);
   const activityTitle = useAtomValue(activityTitleAtom);
 
   const { data, isLoading, isError } = useFetch(
@@ -84,7 +83,7 @@ export default function Home() {
   return (
     <>
       <div className="py-4">
-        <div data-cy="activity" className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <h2 data-cy="activity-title" className="font-bold text-3xl">
             Activity
           </h2>

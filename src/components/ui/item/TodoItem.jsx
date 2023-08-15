@@ -6,21 +6,22 @@ import {
   isEditTodoAtom,
   isOpenAddModalAtom,
   isOpenDeleteModalAtom,
+  isTodoDoneAtom,
   newTodoAtom,
   todoIdAtom,
   todoTitleAtom,
 } from "../../../store";
 
 export function TodoItem({ item, priority }) {
-  const { id, title, activity_group_id } = item;
+  const { id, title } = item;
 
-  const [todoTitle, setTodoTitle] = useAtom(todoTitleAtom);
-  const [todoId, setTodoId] = useAtom(todoIdAtom);
-  const [newTodo, setNewTodo] = useAtom(newTodoAtom);
-  const [isEditTodo, setIsEditTodo] = useAtom(isEditTodoAtom);
-  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
-    useAtom(isOpenAddModalAtom);
+  const [isTodoDone, setIsTodoDone] = useAtom(isTodoDoneAtom);
 
+  const setTodoTitle = useSetAtom(todoTitleAtom);
+  const setTodoId = useSetAtom(todoIdAtom);
+  const setNewTodo = useSetAtom(newTodoAtom);
+  const setIsEditTodo = useSetAtom(isEditTodoAtom);
+  const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
 
   function handleDelete() {
@@ -43,7 +44,12 @@ export function TodoItem({ item, priority }) {
       <div className="bg-white drop-shadow-lg rounded-xl p-7">
         <div className="flex justify-between items-center">
           <div className="flex justify-center items-center space-x-4">
-            <input data-cy="todo-item-checkbox" type="checkbox" name="" id="" />
+            <input
+              data-cy="todo-item-checkbox"
+              type="checkbox"
+              name="priority"
+              onChange={() => setIsTodoDone(!isTodoDone)}
+            />
             <div
               data-cy="todo-item-priority-indicator"
               className={tw(
@@ -59,7 +65,13 @@ export function TodoItem({ item, priority }) {
                   : "bg-[#8942C1]"
               )}
             ></div>
-            <p data-cy="todo_item_title" className="">
+            <p
+              data-cy="todo-item-title"
+              className={tw(
+                "text-lg font-medium",
+                isTodoDone ? "line-through text-gray" : ""
+              )}
+            >
               {title}
             </p>
             <button
@@ -68,7 +80,11 @@ export function TodoItem({ item, priority }) {
               aria-label="todo item edit button"
               onClick={() => handleClick()}
             >
-              <LazyLoadImage src="/assets/pencil.svg" alt="todo item edit" />
+              <LazyLoadImage
+                effect="blur"
+                src="/assets/pencil.svg"
+                alt="todo item edit"
+              />
             </button>
           </div>
           <button
@@ -77,7 +93,7 @@ export function TodoItem({ item, priority }) {
             aria-label="todo item delete button"
             onClick={() => handleDelete(id)}
           >
-            <LazyLoadImage src="/assets/trash.svg" alt="trash" />
+            <LazyLoadImage effect="blur" src="/assets/trash.svg" alt="trash" />
           </button>
         </div>
       </div>

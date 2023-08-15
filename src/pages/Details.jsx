@@ -18,7 +18,6 @@ import {
   activityTitleAtom,
   isDeleteAtom,
   isEditActivityTitleAtom,
-  isEditTodoAtom,
   isOpenAddModalAtom,
   isOpenDeleteModalAtom,
   isSortAtom,
@@ -30,20 +29,19 @@ import {
 export default function Detail() {
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isSort, setIsSort] = useAtom(isSortAtom);
+  const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
   const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
     useAtom(isOpenAddModalAtom);
   const [isEditActivityTitle, setIsEditActivityTitle] = useAtom(
     isEditActivityTitleAtom
   );
-  const [todoId, setTodoId] = useAtom(todoIdAtom);
-  const [isEditTodo, setIsEditTodo] = useAtom(isEditTodoAtom);
-  const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
-
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
     isOpenDeleteModalAtom
   );
 
+  const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
+
   const setActivityTitle = useSetAtom(activityTitleAtom);
 
   const { id } = useParams();
@@ -109,8 +107,8 @@ export default function Detail() {
 
   function handleDelete() {
     deleteTodoMutation.mutate(todoId);
-    setIsOpenDeleteModal(false);
 
+    setIsOpenDeleteModal(false);
     setIsDelete(true);
 
     setTimeout(() => {
@@ -146,7 +144,7 @@ export default function Detail() {
                   defaultValue={data.title}
                 />
               ) : (
-                <h1 data-cy="activity-title" className="font-bold text-3xl">
+                <h1 data-cy="todo-title" className="font-bold text-3xl">
                   {data.title}
                 </h1>
               )}
@@ -173,7 +171,11 @@ export default function Detail() {
               )}
               onClick={() => setIsSort(!isSort)}
             >
-              <LazyLoadImage src="/assets/arrow-sort.svg" alt="arrow sort" />
+              <LazyLoadImage
+                effect="blur"
+                src="/assets/arrow-sort.svg"
+                alt="arrow sort"
+              />
             </button>
             <Button
               data-cy="todo-add-button"
@@ -189,24 +191,24 @@ export default function Detail() {
             </Button>
           </div>
         </div>
-        <div className="mt-10">
+        <div className="mt-10 w-full flex justify-center items-center flex-col">
           {todos.length ? (
             <div className="flex flex-col justify-center items-center w-full space-y-5">
-              {todos.map((item) => (
+              {todos.map((item, index) => (
                 <TodoItem
                   key={item.id}
                   item={item}
+                  data-cy={`todo-item-${index}`}
                   comment={newTodo._comment}
                 />
               ))}
             </div>
           ) : (
-            <div>
+            <div data-cy="todo-empty-state">
               <LazyLoadImage
                 effect="blur"
-                data-cy="activity-empty-state"
-                src="/assets/activity-empty-state.svg"
-                alt="activity empty state"
+                src="/assets/todo-empty-state.svg"
+                alt="todo empty state"
               />
             </div>
           )}
