@@ -3,6 +3,13 @@
   <p>Devcode Gethired Frontend React JS Case: Todo List</p>
 </div>
 
+## Tech Stack
+
+- React JS
+- Tailwind CSS
+- Jotai
+- Framer Motion
+
 ## Getting Started
 
 - Clone this repo

@@ -21,21 +21,31 @@ export const sortOptions = [
   {
     id: 1,
     name: "Terbaru",
+    cy: "sort-latest",
+    icon: "/assets/terbaru.svg",
   },
   {
     id: 2,
     name: "Terlama",
+    cy: "sort-oldest",
+    icon: "/assets/terlama.svg",
   },
   {
     id: 3,
     name: "A-Z",
+    cy: "sort-az",
+    icon: "/assets/az.svg",
   },
   {
     id: 4,
     name: "Z-A",
+    cy: "sort-za",
+    icon: "/assets/za.svg",
   },
   {
     id: 5,
     name: "Belum Selesai",
+    cy: "sort-unfinished",
+    icon: "/assets/belum-selesai.svg",
   },
 ];

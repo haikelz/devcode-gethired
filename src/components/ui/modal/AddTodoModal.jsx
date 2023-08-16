@@ -7,7 +7,9 @@ import { priorityOptions } from "../../../lib/utils/data";
 import {
   isEditTodoAtom,
   isOpenAddModalAtom,
+  isSelectPriorityAtom,
   newTodoAtom,
+  selectPriorityAtom,
   todoIdAtom,
 } from "../../../store";
 import { Button } from "../Button";
@@ -15,6 +17,8 @@ import { Button } from "../Button";
 export function AddTodoModal({ handleChange, handleCreate }) {
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isEditTodo, setIsEditTodo] = useAtom(isEditTodoAtom);
+  const [selectPriority, setSelectPriority] = useAtom(selectPriorityAtom);
+  const [isSelectPriority, setIsSelectPriority] = useAtom(isSelectPriorityAtom);
 
   const todoId = useAtomValue(todoIdAtom);
 
@@ -38,12 +42,19 @@ export function AddTodoModal({ handleChange, handleCreate }) {
 
     setIsEditTodo(false);
     setIsOpenAddTodoModal(false);
-    setNewTodo({ activity_group_id: null, title: "", _comment: "" });
+    setNewTodo({ activity_group_id: null, title: "", priority: "" });
   }
+
+  function handleClose() {
+    setNewTodo({ activity_group_id: null, title: "", priority: "" });
+    setIsOpenAddTodoModal(false);
+  }
+
+  console.log(selectPriority);
 
   return (
     <div className="flex w-full min-h-screen fixed inset-0 bg-black/20 p-4 justify-center items-center">
-      <div className="bg-white drop-shadow-lg sm:w-[830px] rounded-md">
+      <div className="bg-white drop-shadow-lg sm:w-[830px] rounded-xl">
         <div className="border-b-2 border-[#E5E5E5]">
           <div className="flex justify-between items-center p-4">
             <p data-cy="modal-add-title" className="text-lg font-semibold">
@@ -53,7 +64,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
               data-cy="modal-add-close-button"
               type="button"
               aria-label="close"
-              onClick={() => setIsOpenAddTodoModal(false)}
+              onClick={handleClose}
               className="hover:bg-slate-100 p-2 rounded-md"
             >
               <LazyLoadImage src="/assets/close.svg" alt="close" />
@@ -92,48 +103,86 @@ export function AddTodoModal({ handleChange, handleCreate }) {
               >
                 PRIORITY
               </label>
-              {/** TODO: jangan pake select component */}
-              <button type="button" aria-label="select options">
-                {/*<div
-              data-cy="todo-item-priority-indicator"
-              className={tw(
-                "w-3 h-3 rounded-full",
-                priority === "very-high"
-                  ? "bg-[#ED4C5C]"
-                  : priority === "high"
-                  ? "bg-[#F8A541]"
-                  : priority === "medium"
-                  ? "bg-[#00A790]"
-                  : priority === "low"
-                  ? "bg-[#428BC1]"
-                  : "bg-[#8942C1]"
-              )}
-              ></div>*/}
-                <span>Pilih priority</span>
-              </button>
-              <select
-                data-cy="modal-add-priority-dropdown"
-                onChange={handleChange}
-                name="_comment"
-                defaultValue="Pilih Priority"
-                value={newTodo._comment}
-                className="mt-2 p-2 border-2 border-[#E5E5E5] bg-transparent bg-none rounded-md"
-                required
-              >
-                <option>Pilih Priority</option>
-                {priorityOptions.map((item) => (
-                  <option
-                    data-cy={`modal-add-priority-${item.priority}`}
-                    key={item.id}
-                    value={item.priority}
-                  >
-                    {item.priority
-                      .split(/[^A-Za-z0-9]/gi)
-                      .map((item) => item[0].toUpperCase() + item.slice(1))
-                      .join(" ")}
-                  </option>
-                ))}
-              </select>
+              <div className="w-[502px]">
+                <button
+                  type="button"
+                  aria-label="select options"
+                  className={tw(
+                    "border-2 border-[#E5E5E5] flex justify-between items-center relative mt-2",
+                    "space-x-2 px-4 py-2 rounded-md",
+                    isSelectPriority
+                      ? "border-b-0 bg-[#F4F4F4] rounded-b-none"
+                      : ""
+                  )}
+                  onClick={() => setIsSelectPriority(!isSelectPriority)}
+                >
+                  <span className="text-base">Pilih priority</span>
+                  <LazyLoadImage
+                    src={
+                      isSelectPriority
+                        ? `/assets/chevron-down.svg`
+                        : `/assets/chevron-up.svg`
+                    }
+                    alt="chevron up"
+                  />
+                </button>
+                {isSelectPriority ? (
+                  <div className="absolute">
+                    {priorityOptions.map((item) => (
+                      <button
+                        type="button"
+                        aria-label="priority"
+                        key={item.id}
+                        className={tw(
+                          "border-2 w-full border-[#E5E5E5] bg-white px-4 py-2 flex justify-between items-center",
+                          item.priority === "low"
+                            ? "rounded-b-lg"
+                            : "border-b-0"
+                        )}
+                        onClick={() => setSelectPriority(item.priority)}
+                      >
+                        <div className="flex justify-center items-center space-x-4">
+                          <div
+                            data-cy="todo-item-priority-indicator"
+                            className={tw(
+                              "w-3 h-3 rounded-full",
+                              item.priority === "very-high"
+                                ? "bg-[#ED4C5C]"
+                                : item.priority === "high"
+                                ? "bg-[#F8A541]"
+                                : item.priority === "medium"
+                                ? "bg-[#00A790]"
+                                : item.priority === "low"
+                                ? "bg-[#428BC1]"
+                                : "bg-[#8942C1]"
+                            )}
+                          ></div>
+                          <span>
+                            {item.priority === "very-high"
+                              ? item.priority
+                                  .replace(/[^A-Za-z0-9 ]/gi, " ")
+                                  .split(" ")
+                                  .map(
+                                    (item) =>
+                                      item[0].toUpperCase() + item.slice(1)
+                                  )
+                                  .join(" ")
+                              : item.priority[0].toUpperCase() +
+                                item.priority.slice(1)}
+                          </span>
+                        </div>
+                        {selectPriority === item.priority ? (
+                          <LazyLoadImage
+                            effect="blur"
+                            src="/assets/check.svg"
+                            alt="check priority"
+                          />
+                        ) : null}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

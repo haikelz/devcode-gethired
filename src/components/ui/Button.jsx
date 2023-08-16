@@ -6,7 +6,7 @@ export function Button({ children, className, label, ...props }) {
       type="button"
       aria-label={label}
       className={tw(
-        "py-3 px-10 font-semibold rounded-full text-white",
+        "py-3 px-5 font-semibold rounded-full text-white",
         className
       )}
       {...props}

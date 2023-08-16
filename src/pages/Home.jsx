@@ -50,7 +50,7 @@ export default function Home() {
     createNewActivityMutation.mutate({
       title: "New Activity",
       email: "siapa@siapa.com",
-      _comment: "asfdasf",
+      priority: "asfdasf",
     });
   }
 
@@ -67,8 +67,8 @@ export default function Home() {
 
   function handleDelete() {
     deleteActivityMutation.mutate(activityId);
-    setIsOpenDeleteModal(false);
 
+    setIsOpenDeleteModal(false);
     setIsDelete(true);
     setTimeout(() => {
       setIsDelete(false);

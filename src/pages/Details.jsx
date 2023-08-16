@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import ErrorWhileFetch from "../components/ErrorWhileFetch";
@@ -9,19 +9,20 @@ import {
   Button,
   ConfirmDeleteModal,
   InformationModal,
-  TodoItem,
 } from "../components/ui";
+import SortedTodos from "../components/ui/SortedTodos";
+import { SortDropdown } from "../components/ui/dropdown/SortDropdown";
 import { useFetch } from "../hooks";
 import { tw } from "../lib/helpers";
 import { deleteData, patchData, postData } from "../lib/utils/axiosConfig";
 import {
-  activityTitleAtom,
   isDeleteAtom,
   isEditActivityTitleAtom,
   isOpenAddModalAtom,
   isOpenDeleteModalAtom,
   isSortAtom,
   newTodoAtom,
+  selectPriorityAtom,
   todoIdAtom,
   todoTitleAtom,
 } from "../store";
@@ -30,19 +31,19 @@ export default function Detail() {
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isSort, setIsSort] = useAtom(isSortAtom);
   const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
-  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
-    useAtom(isOpenAddModalAtom);
+
   const [isEditActivityTitle, setIsEditActivityTitle] = useAtom(
     isEditActivityTitleAtom
   );
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
     isOpenDeleteModalAtom
   );
+  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
+    useAtom(isOpenAddModalAtom);
 
   const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
-
-  const setActivityTitle = useSetAtom(activityTitleAtom);
+  const selectPriority = useAtomValue(selectPriorityAtom);
 
   const { id } = useParams();
   const { data, isLoading, isError } = useFetch([id], `/activity-groups/${id}`);
@@ -71,11 +72,11 @@ export default function Detail() {
     createNewTodoMutation.mutate({
       activity_group_id: id,
       title: newTodo.title,
-      _comment: newTodo._comment,
+      priority: selectPriority,
     });
 
     setIsOpenAddTodoModal(false);
-    setNewTodo({ activity_group_id: null, title: "", _comment: "" });
+    setNewTodo({ activity_group_id: null, title: "", priority: "" });
   }
 
   async function editTodo(config) {
@@ -89,9 +90,8 @@ export default function Detail() {
     },
   });
 
-  function handleEdit(value) {
-    setActivityTitle(value);
-    editTodoMutation.mutate({ title: value });
+  function handleEdit(title) {
+    editTodoMutation.mutate({ title: title });
   }
 
   async function deleteTodo() {
@@ -160,23 +160,26 @@ export default function Detail() {
             </div>
           </div>
           <div className="flex justify-center items-center space-x-4">
-            <button
-              data-cy="todo-sort-button"
-              type="button"
-              aria-label="todo sort button"
-              className={tw(
-                "border border-[#E5E5E5]",
-                "rounded-full w-[54px] h-[54px]",
-                "flex justify-center items-center"
-              )}
-              onClick={() => setIsSort(!isSort)}
-            >
-              <LazyLoadImage
-                effect="blur"
-                src="/assets/arrow-sort.svg"
-                alt="arrow sort"
-              />
-            </button>
+            <div className="">
+              <button
+                data-cy="todo-sort-button"
+                type="button"
+                aria-label="todo sort button"
+                className={tw(
+                  "border border-[#E5E5E5] relative",
+                  "rounded-full w-[54px] h-[54px]",
+                  "flex justify-center items-center"
+                )}
+                onClick={() => setIsSort(!isSort)}
+              >
+                <LazyLoadImage
+                  effect="blur"
+                  src="/assets/arrow-sort.svg"
+                  alt="arrow sort"
+                />
+              </button>
+              {isSort ? <SortDropdown /> : null}
+            </div>
             <Button
               data-cy="todo-add-button"
               className={tw(
@@ -192,26 +195,7 @@ export default function Detail() {
           </div>
         </div>
         <div className="mt-10 w-full flex justify-center items-center flex-col">
-          {todos.length ? (
-            <div className="flex flex-col justify-center items-center w-full space-y-5">
-              {todos.map((item, index) => (
-                <TodoItem
-                  key={item.id}
-                  item={item}
-                  data-cy={`todo-item-${index}`}
-                  comment={newTodo._comment}
-                />
-              ))}
-            </div>
-          ) : (
-            <div data-cy="todo-empty-state">
-              <LazyLoadImage
-                effect="blur"
-                src="/assets/todo-empty-state.svg"
-                alt="todo empty state"
-              />
-            </div>
-          )}
+          <SortedTodos todos={todos} />
         </div>
       </div>
       {isOpenAddTodoModal ? (

@@ -7,3 +7,8 @@
 * {
   @apply outline-none font-poppins;
 }
+
+html,
+body {
+  @apply text-[#111111];
+}

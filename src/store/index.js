@@ -7,7 +7,7 @@ export const isEditActivityTitleAtom = atom(false);
 export const newTodoAtom = atom({
   activity_group_id: null,
   title: "",
-  _comment: "",
+  priority: "",
 });
 
 export const isOpenAddModalAtom = atom(false);
@@ -19,3 +19,6 @@ export const activityIdAtom = atom(null);
 export const isDeleteAtom = atom(false);
 export const todoTitleAtom = atom("");
 export const isTodoDoneAtom = atom(false);
+export const selectPriorityAtom = atom("");
+export const isSelectPriorityAtom = atom(false);
+export const sortTypeAtom = atom("terbaru");

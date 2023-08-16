@@ -4,6 +4,7 @@ export default function ErrorWhileFetch() {
   return (
     <div className="flex justify-center items-center flex-col text-center">
       <LazyLoadImage
+        effect="blur"
         src="/assets/error-while-fetching.svg"
         alt="error while fetching"
         width={400}

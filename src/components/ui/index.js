@@ -1,4 +1,5 @@
 export * from "./Button";
-export * from "./item/ActivityItem";
-export * from "./item/TodoItem";
+export * from "./SortedTodos";
+export * from "./dropdown";
+export * from "./item";
 export * from "./modal";

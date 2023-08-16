@@ -1,7 +1,7 @@
 import { useAtom, useSetAtom } from "jotai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { tw } from "../../../lib/helpers";
-import { getData } from "../../../lib/utils/axiosConfig";
+import { getData, patchData } from "../../../lib/utils/axiosConfig";
 import {
   isEditTodoAtom,
   isOpenAddModalAtom,
@@ -12,8 +12,8 @@ import {
   todoTitleAtom,
 } from "../../../store";
 
-export function TodoItem({ item, priority }) {
-  const { id, title } = item;
+export function TodoItem({ item }) {
+  const { id, title, priority, is_active } = item;
 
   const [isTodoDone, setIsTodoDone] = useAtom(isTodoDoneAtom);
 
@@ -24,6 +24,10 @@ export function TodoItem({ item, priority }) {
   const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
 
+  async function handleIsDone() {
+    await patchData(`/todo-items/${id}`, { is_active: !isTodoDone });
+  }
+
   function handleDelete() {
     setTodoTitle(title);
     setTodoId(id);
@@ -32,8 +36,8 @@ export function TodoItem({ item, priority }) {
 
   async function handleClick() {
     const response = await getData(`/todo-items/${id}`);
-    setNewTodo(response);
 
+    setNewTodo(response);
     setIsOpenAddTodoModal(true);
     setTodoId(id);
     setIsEditTodo(true);
@@ -48,7 +52,11 @@ export function TodoItem({ item, priority }) {
               data-cy="todo-item-checkbox"
               type="checkbox"
               name="priority"
-              onChange={() => setIsTodoDone(!isTodoDone)}
+              onChange={(e) => {
+                setIsTodoDone(e.target.checked);
+                handleIsDone();
+              }}
+              checked={is_active}
             />
             <div
               data-cy="todo-item-priority-indicator"

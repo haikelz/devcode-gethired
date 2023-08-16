@@ -20,12 +20,12 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
         />
         <p data-cy="modal-delete-title" className="my-7">
           Apakah anda yakin menghapus{" "}
-          <span className="font-bold text-lg">“{title}”</span>{" "}
+          <span className="font-bold text-lg">“{title}”?</span>
         </p>
         <div className="flex justify-center items-center space-x-4">
           <Button
             data-cy="modal-delete-cancel-button"
-            className="bg-secondary text-[#4A4A4A]"
+            className="bg-secondary text-[#4A4A4A] px-10"
             label="cancel"
             onClick={() => setIsOpenDeleteModal(false)}
           >
@@ -33,7 +33,7 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
           </Button>
           <Button
             data-cy="modal-delete-confirm-button"
-            className="bg-danger"
+            className="bg-danger px-10"
             label="delete"
             onClick={deleteFunc}
           >
