@@ -9,9 +9,9 @@ import {
   Button,
   ConfirmDeleteModal,
   InformationModal,
+  SortDropdown,
+  SortedTodos,
 } from "../components/ui";
-import SortedTodos from "../components/ui/SortedTodos";
-import { SortDropdown } from "../components/ui/dropdown/SortDropdown";
 import { useFetch } from "../hooks";
 import { tw } from "../lib/helpers";
 import { deleteData, patchData, postData } from "../lib/utils/axiosConfig";
@@ -31,7 +31,6 @@ export default function Detail() {
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isSort, setIsSort] = useAtom(isSortAtom);
   const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
-
   const [isEditActivityTitle, setIsEditActivityTitle] = useAtom(
     isEditActivityTitleAtom
   );
@@ -160,7 +159,7 @@ export default function Detail() {
             </div>
           </div>
           <div className="flex justify-center items-center space-x-4">
-            <div className="">
+            <div>
               <button
                 data-cy="todo-sort-button"
                 type="button"
@@ -172,25 +171,21 @@ export default function Detail() {
                 )}
                 onClick={() => setIsSort(!isSort)}
               >
-                <LazyLoadImage
-                  effect="blur"
-                  src="/assets/arrow-sort.svg"
-                  alt="arrow sort"
-                />
+                <LazyLoadImage src="/assets/arrow-sort.svg" alt="arrow sort" />
               </button>
               {isSort ? <SortDropdown /> : null}
             </div>
             <Button
               data-cy="todo-add-button"
               className={tw(
-                "bg-primary space-x-1",
+                "bg-primary md:space-x-1",
                 "font-semibold flex justify-center items-center"
               )}
               label="tambah"
               onClick={() => setIsOpenAddTodoModal(true)}
             >
-              <LazyLoadImage src="/assets/plus.svg" alt="tambah" />{" "}
-              <span>Tambah</span>
+              <LazyLoadImage src="/assets/plus.svg" alt="tambah" />
+              <span className="hidden md:block">Tambah</span>
             </Button>
           </div>
         </div>

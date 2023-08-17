@@ -1,4 +1,5 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
+import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { tw } from "../../../lib/helpers";
 import { getData, patchData } from "../../../lib/utils/axiosConfig";
@@ -6,7 +7,6 @@ import {
   isEditTodoAtom,
   isOpenAddModalAtom,
   isOpenDeleteModalAtom,
-  isTodoDoneAtom,
   newTodoAtom,
   todoIdAtom,
   todoTitleAtom,
@@ -15,7 +15,7 @@ import {
 export function TodoItem({ item }) {
   const { id, title, priority, is_active } = item;
 
-  const [isTodoDone, setIsTodoDone] = useAtom(isTodoDoneAtom);
+  const [isTodoDone, setIsTodoDone] = useState(false);
 
   const setTodoTitle = useSetAtom(todoTitleAtom);
   const setTodoId = useSetAtom(todoIdAtom);
@@ -25,7 +25,9 @@ export function TodoItem({ item }) {
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
 
   async function handleIsDone() {
-    await patchData(`/todo-items/${id}`, { is_active: !isTodoDone });
+    await patchData(`/todo-items/${id}`, {
+      is_active: isTodoDone,
+    });
   }
 
   function handleDelete() {
@@ -43,6 +45,8 @@ export function TodoItem({ item }) {
     setIsEditTodo(true);
   }
 
+  console.log(is_active);
+  console.log(isTodoDone);
   return (
     <div className="w-full">
       <div className="bg-white drop-shadow-lg rounded-xl p-7">
@@ -53,10 +57,11 @@ export function TodoItem({ item }) {
               type="checkbox"
               name="priority"
               onChange={(e) => {
-                setIsTodoDone(e.target.checked);
+                setIsTodoDone(!isTodoDone);
                 handleIsDone();
               }}
-              checked={is_active}
+              defaultChecked={!is_active}
+              className="bg-red-100 border-red-300 text-red-500 focus:ring-red-200"
             />
             <div
               data-cy="todo-item-priority-indicator"
@@ -77,7 +82,7 @@ export function TodoItem({ item }) {
               data-cy="todo-item-title"
               className={tw(
                 "text-lg font-medium",
-                isTodoDone ? "line-through text-gray" : ""
+                isTodoDone || !is_active ? "line-through text-gray" : ""
               )}
             >
               {title}
@@ -86,7 +91,7 @@ export function TodoItem({ item }) {
               data-cy="todo-item-edit-button"
               type="button"
               aria-label="todo item edit button"
-              onClick={() => handleClick()}
+              onClick={handleClick}
             >
               <LazyLoadImage
                 effect="blur"

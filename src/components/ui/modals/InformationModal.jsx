@@ -6,7 +6,6 @@ export function InformationModal() {
       <div className="flex space-x-2 justify-center items-center bg-white px-6 py-4 rounded-xl drop-shadow-lg">
         <LazyLoadImage
           data-cy="modal-information-icon"
-          effect="blur"
           src="/assets/information.svg"
           alt="modal information icon"
         />

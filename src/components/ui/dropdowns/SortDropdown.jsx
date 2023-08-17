@@ -1,11 +1,10 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { sortOptions } from "../../../lib/utils/data";
-import { isSortAtom, sortTypeAtom } from "../../../store";
 import { tw } from "../../../lib/helpers";
+import { sortOptions } from "../../../lib/utils/data";
+import { sortTypeAtom } from "../../../store";
 
 export function SortDropdown() {
-  const isSort = useAtomValue(isSortAtom);
   const [sortType, setSortType] = useAtom(sortTypeAtom);
 
   return (

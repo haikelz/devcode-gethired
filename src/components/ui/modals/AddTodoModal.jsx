@@ -13,6 +13,7 @@ import {
   todoIdAtom,
 } from "../../../store";
 import { Button } from "../Button";
+import { PriorityItem } from "../items";
 
 export function AddTodoModal({ handleChange, handleCreate }) {
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
@@ -25,7 +26,11 @@ export function AddTodoModal({ handleChange, handleCreate }) {
   const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
 
   async function editTodo() {
-    await patchData(`/todo-items/${todoId}`, newTodo);
+    await patchData(`/todo-items/${todoId}`, {
+      activity_group_id: newTodo.activity_group_id,
+      title: newTodo.title,
+      priority: selectPriority,
+    });
   }
 
   const queryClient = useQueryClient();
@@ -48,13 +53,22 @@ export function AddTodoModal({ handleChange, handleCreate }) {
   function handleClose() {
     setNewTodo({ activity_group_id: null, title: "", priority: "" });
     setIsOpenAddTodoModal(false);
+    setSelectPriority("");
   }
 
-  console.log(selectPriority);
+  function handleSelectPriority(priority) {
+    setSelectPriority(priority);
+    setIsSelectPriority(false);
+  }
 
   return (
-    <div className="flex w-full min-h-screen fixed inset-0 bg-black/20 p-4 justify-center items-center">
-      <div className="bg-white drop-shadow-lg sm:w-[830px] rounded-xl">
+    <div
+      className={tw(
+        "flex w-full min-h-screen fixed inset-0",
+        "bg-black/20 p-4 justify-center items-center"
+      )}
+    >
+      <div className="bg-white drop-shadow-lg w-full sm:w-[830px] rounded-xl">
         <div className="border-b-2 border-[#E5E5E5]">
           <div className="flex justify-between items-center p-4">
             <p data-cy="modal-add-title" className="text-lg font-semibold">
@@ -103,12 +117,13 @@ export function AddTodoModal({ handleChange, handleCreate }) {
               >
                 PRIORITY
               </label>
-              <div className="w-[502px]">
+              <div className="w-[202px]">
                 <button
                   type="button"
                   aria-label="select options"
                   className={tw(
-                    "border-2 border-[#E5E5E5] flex justify-between items-center relative mt-2",
+                    "border-2 border-[#E5E5E5]",
+                    "flex justify-between w-full items-center relative mt-2",
                     "space-x-2 px-4 py-2 rounded-md",
                     isSelectPriority
                       ? "border-b-0 bg-[#F4F4F4] rounded-b-none"
@@ -116,68 +131,47 @@ export function AddTodoModal({ handleChange, handleCreate }) {
                   )}
                   onClick={() => setIsSelectPriority(!isSelectPriority)}
                 >
-                  <span className="text-base">Pilih priority</span>
-                  <LazyLoadImage
-                    src={
-                      isSelectPriority
-                        ? `/assets/chevron-down.svg`
-                        : `/assets/chevron-up.svg`
-                    }
-                    alt="chevron up"
-                  />
+                  {selectPriority ? (
+                    <PriorityItem
+                      priority={selectPriority}
+                      selectPriority={selectPriority}
+                    />
+                  ) : (
+                    <>
+                      <span className="text-base">
+                        {isEditTodo ? newTodo.priority : "sdfsd"}
+                      </span>
+                      <LazyLoadImage
+                        src={
+                          isSelectPriority
+                            ? `/assets/chevron-down.svg`
+                            : `/assets/chevron-up.svg`
+                        }
+                        alt="chevron up"
+                      />
+                    </>
+                  )}
                 </button>
                 {isSelectPriority ? (
-                  <div className="absolute">
+                  <div className="absolute w-[202px]">
                     {priorityOptions.map((item) => (
                       <button
                         type="button"
                         aria-label="priority"
                         key={item.id}
                         className={tw(
-                          "border-2 w-full border-[#E5E5E5] bg-white px-4 py-2 flex justify-between items-center",
+                          "border-2 w-full border-[#E5E5E5] bg-white",
+                          "px-4 py-2 space-x-4 flex justify-between items-center",
                           item.priority === "low"
                             ? "rounded-b-lg"
                             : "border-b-0"
                         )}
-                        onClick={() => setSelectPriority(item.priority)}
+                        onClick={() => handleSelectPriority(item.priority)}
                       >
-                        <div className="flex justify-center items-center space-x-4">
-                          <div
-                            data-cy="todo-item-priority-indicator"
-                            className={tw(
-                              "w-3 h-3 rounded-full",
-                              item.priority === "very-high"
-                                ? "bg-[#ED4C5C]"
-                                : item.priority === "high"
-                                ? "bg-[#F8A541]"
-                                : item.priority === "medium"
-                                ? "bg-[#00A790]"
-                                : item.priority === "low"
-                                ? "bg-[#428BC1]"
-                                : "bg-[#8942C1]"
-                            )}
-                          ></div>
-                          <span>
-                            {item.priority === "very-high"
-                              ? item.priority
-                                  .replace(/[^A-Za-z0-9 ]/gi, " ")
-                                  .split(" ")
-                                  .map(
-                                    (item) =>
-                                      item[0].toUpperCase() + item.slice(1)
-                                  )
-                                  .join(" ")
-                              : item.priority[0].toUpperCase() +
-                                item.priority.slice(1)}
-                          </span>
-                        </div>
-                        {selectPriority === item.priority ? (
-                          <LazyLoadImage
-                            effect="blur"
-                            src="/assets/check.svg"
-                            alt="check priority"
-                          />
-                        ) : null}
+                        <PriorityItem
+                          priority={item.priority}
+                          selectPriority={selectPriority}
+                        />
                       </button>
                     ))}
                   </div>
@@ -190,7 +184,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
           <Button
             data-cy="modal-add-save-button"
             className={tw(
-              newTodo.title === "" ? "bg-[#16ABF8]/20" : "bg-[#16ABF8]"
+              newTodo.title === "" ? "bg-[#16ABF8]/20" : "bg-[#16ABF8] px-10"
             )}
             label="simpan"
             onClick={isEditTodo ? handleEdit : handleCreate}

@@ -8,6 +8,7 @@ export const newTodoAtom = atom({
   activity_group_id: null,
   title: "",
   priority: "",
+  is_active: 1,
 });
 
 export const isOpenAddModalAtom = atom(false);

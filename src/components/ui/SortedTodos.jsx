@@ -2,9 +2,9 @@ import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { sortTypeAtom } from "../../store";
-import { TodoItem } from "./item/TodoItem";
+import { TodoItem } from "./items/TodoItem";
 
-export default function SortedTodos({ todos }) {
+export function SortedTodos({ todos }) {
   const sortType = useAtomValue(sortTypeAtom);
 
   const sortedTodos = useMemo(
@@ -19,14 +19,14 @@ export default function SortedTodos({ todos }) {
         }
 
         if (sortType === "a-z") {
-          if (a.title > b.title) return 1;
-          if (a.title < b.title) return -1;
+          if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+          if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
           return 0;
         }
 
         if (sortType === "z-a") {
-          if (a.title > b.title) return -1;
-          if (a.title < b.title) return 1;
+          if (a.title.toLowerCase() > b.title.toLowerCase()) return -1;
+          if (a.title.toLowerCase() < b.title.toLowerCase()) return 1;
           return 0;
         }
       }),
