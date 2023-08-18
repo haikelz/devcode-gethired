@@ -12,9 +12,9 @@ export default function Layout({ children }) {
           <Link
             to="/"
             data-cy="header-title"
-            className="text-2xl text-white uppercase font-bold"
+            className="text-2xl text-white font-bold"
           >
-            To Do List App
+            TO DO LIST APP
           </Link>
         </div>
       </header>

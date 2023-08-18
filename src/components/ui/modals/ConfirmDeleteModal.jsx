@@ -9,15 +9,13 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
 
   return (
     <div
+      data-cy="modal-delete"
       className={tw(
         "fixed bg-black/20 w-full p-4",
         "flex inset-0 justify-center items-center min-h-screen"
       )}
     >
-      <div
-        data-cy="modal-delete"
-        className="flex text-center bg-white rounded-xl p-10 justify-center items-center flex-col"
-      >
+      <div className="flex text-center bg-white rounded-xl p-10 justify-center items-center flex-col">
         <LazyLoadImage
           data-cy="modal-delete-icon"
           src="/assets/warning.svg"
@@ -31,7 +29,7 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
           <Button
             data-cy="modal-delete-cancel-button"
             className="bg-secondary text-[#4A4A4A] px-10"
-            label="cancel"
+            label="modal delete cancel button"
             onClick={() => setIsOpenDeleteModal(false)}
           >
             Batal
@@ -39,7 +37,7 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
           <Button
             data-cy="modal-delete-confirm-button"
             className="bg-danger px-10"
-            label="delete"
+            label="modal delete confirm button"
             onClick={deleteFunc}
           >
             Delete

@@ -112,12 +112,11 @@ export default function Home() {
                 "lg:grid-cols-4"
               )}
             >
-              {activities.map((item, index) => (
+              {activities.map((item) => (
                 <ActivityItem
-                  data-cy={`activity-item-${index}`}
+                  data-cy="activity-item"
                   key={item.id}
                   item={item}
-                  index={index}
                 />
               ))}
             </div>

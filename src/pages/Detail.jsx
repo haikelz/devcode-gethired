@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom, useAtomValue } from "jotai";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import ErrorWhileFetch from "../components/ErrorWhileFetch";
@@ -41,6 +41,8 @@ export default function Detail() {
   );
   const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
     useAtom(isOpenAddModalAtom);
+
+  const inputRef = useRef(null);
 
   const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
@@ -147,6 +149,8 @@ export default function Detail() {
             <div className="flex justify-center items-center ml-5">
               {isEditActivityTitle ? (
                 <input
+                  data-cy="todo-title"
+                  ref={inputRef}
                   className={tw(
                     "bg-none border-b-2 border-blue-700 py-2",
                     "w-fit bg-transparent",
@@ -169,7 +173,10 @@ export default function Detail() {
                 type="button"
                 aria-label="todo title edit button"
                 className="ml-5"
-                onClick={() => setIsEditActivityTitle(!isEditActivityTitle)}
+                onClick={() => {
+                  setIsEditActivityTitle(!isEditActivityTitle);
+                  inputRef.current?.focus();
+                }}
               >
                 <LazyLoadImage src="/assets/pencil.svg" alt="pencil" />
               </button>
