@@ -80,7 +80,7 @@ export function TodoItem({ item }) {
               className={tw(
                 "w-3 h-3 rounded-full",
                 priority === "very-high"
-                  ? "bg-[#ED4C5C]"
+                  ? "bg-danger"
                   : priority === "high"
                   ? "bg-[#F8A541]"
                   : priority === "medium"

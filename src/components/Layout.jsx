@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 export default function Layout({ children }) {
   return (
-    <div className="max-w-full bg-[#F4F4F4] min-h-screen w-full">
+    <div className="max-w-full bg-secondary min-h-screen w-full">
       <header
         data-cy="header-background"
-        className="bg-[#16ABF8] flex justify-center p-4 items-center max-w-full w-full shadow-md"
+        className="bg-primary flex justify-center p-4 items-center max-w-full w-full shadow-md"
       >
         <div className="max-w-5xl w-full px-1">
           <Link

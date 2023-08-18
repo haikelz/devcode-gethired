@@ -1,12 +1,14 @@
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import slugify from "slugify";
-import { sortTypeAtom } from "../../store";
+import { isOpenAddModalAtom, sortTypeAtom } from "../../store";
 import { TodoItem } from "./items/TodoItem";
 
 export function SortedTodos({ todos }) {
   const sortType = useAtomValue(sortTypeAtom);
+
+  const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
 
   const sortedTodos = useMemo(
     () =>
@@ -51,7 +53,11 @@ export function SortedTodos({ todos }) {
           ))}
         </div>
       ) : (
-        <div data-cy="todo-empty-state">
+        <div
+          data-cy="todo-empty-state"
+          onClick={() => setIsOpenAddTodoModal(true)}
+          className="cursor-pointer"
+        >
           <LazyLoadImage
             effect="blur"
             src="/assets/todo-empty-state.svg"

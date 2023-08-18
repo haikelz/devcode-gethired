@@ -6,7 +6,9 @@
 ## Tech Stack
 
 - React JS
+- Vite
 - Tailwind CSS
+- React Query
 - Jotai
 
 ## Getting Started

@@ -64,8 +64,11 @@ export function AddTodoModal({ handleChange, handleCreate }) {
       priority: "",
       is_active: 1,
     });
+
+    setIsEditTodo(false);
     setIsOpenAddTodoModal(false);
     setSelectPriority("");
+    setIsSelectPriority(false);
   }
 
   function handleSelectPriority(priority) {
@@ -204,11 +207,20 @@ export function AddTodoModal({ handleChange, handleCreate }) {
           <Button
             data-cy="modal-add-save-button"
             className={tw(
-              newTodo.title === "" ? "bg-[#16ABF8]/20" : "bg-[#16ABF8] px-10"
+              "px-8",
+              isEditTodo === false &&
+                (newTodo.title === "" || selectPriority === "")
+                ? "bg-primary/20"
+                : "bg-primary"
             )}
             label="simpan"
             onClick={isEditTodo ? handleEdit : handleCreate}
-            disabled={newTodo.title === "" ? true : false}
+            disabled={
+              isEditTodo === false &&
+              (newTodo.title === "" || selectPriority === "")
+                ? true
+                : false
+            }
           >
             Simpan
           </Button>

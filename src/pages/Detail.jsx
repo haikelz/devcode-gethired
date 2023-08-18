@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom, useAtomValue } from "jotai";
+import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useParams } from "react-router-dom";
 import ErrorWhileFetch from "../components/ErrorWhileFetch";
@@ -17,7 +18,6 @@ import { tw } from "../lib/helpers";
 import { deleteData, patchData, postData } from "../lib/utils/axiosConfig";
 import {
   isDeleteAtom,
-  isEditActivityTitleAtom,
   isOpenAddModalAtom,
   isOpenDeleteModalAtom,
   isSortAtom,
@@ -28,12 +28,14 @@ import {
 } from "../store";
 
 export default function Detail() {
+  const { id } = useParams();
+
+  const [isEditActivityTitle, setIsEditActivityTitle] = useState(false);
+
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isSort, setIsSort] = useAtom(isSortAtom);
   const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
-  const [isEditActivityTitle, setIsEditActivityTitle] = useAtom(
-    isEditActivityTitleAtom
-  );
+  const [selectPriority, setSelectPriority] = useAtom(selectPriorityAtom);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
     isOpenDeleteModalAtom
   );
@@ -42,9 +44,7 @@ export default function Detail() {
 
   const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
-  const [selectPriority, setSelectPriority] = useAtom(selectPriorityAtom);
 
-  const { id } = useParams();
   const { data, isLoading, isError } = useFetch([id], `/activity-groups/${id}`);
 
   function handleChange(e) {
@@ -54,6 +54,7 @@ export default function Detail() {
     setNewTodo(data);
   }
 
+  // new todo item
   async function createNewTodo(config) {
     await postData("/todo-items", config);
   }
@@ -72,15 +73,20 @@ export default function Detail() {
       activity_group_id: id,
       title: newTodo.title,
       priority: selectPriority,
-      _comment:
-        "List of priority is : very-high, high, normal, low, very-low | defalut value is very-high",
+      is_active: 1,
     });
 
     setIsOpenAddTodoModal(false);
     setSelectPriority("");
-    setNewTodo({ activity_group_id: null, title: "", priority: "" });
+    setNewTodo({
+      activity_group_id: null,
+      title: "",
+      priority: "",
+      is_active: 1,
+    });
   }
 
+  // edit todo item
   async function editTodo(config) {
     await patchData(`/activity-groups/${id}`, config);
   }
@@ -96,6 +102,7 @@ export default function Detail() {
     editTodoMutation.mutate({ title: title });
   }
 
+  // delete todo item
   async function deleteTodo() {
     await deleteData(`/todo-items/${todoId}`);
   }
@@ -140,13 +147,20 @@ export default function Detail() {
             <div className="flex justify-center items-center ml-5">
               {isEditActivityTitle ? (
                 <input
-                  className="bg-none bg-transparent"
+                  className={tw(
+                    "bg-none border-b-2 border-blue-700 py-2",
+                    "w-fit bg-transparent",
+                    "text-xl md:text-3xl font-bold"
+                  )}
                   type="text"
                   onChange={(e) => handleEdit(e.target.value)}
                   defaultValue={data.title}
                 />
               ) : (
-                <h1 data-cy="todo-title" className="font-bold text-3xl">
+                <h1
+                  data-cy="todo-title"
+                  className="font-bold text-xl md:text-3xl"
+                >
                   {data.title}
                 </h1>
               )}
@@ -168,8 +182,8 @@ export default function Detail() {
                 type="button"
                 aria-label="todo sort button"
                 className={tw(
-                  "border border-[#E5E5E5] relative",
-                  "rounded-full w-[54px] h-[54px]",
+                  "border border-[#E5E5E5] md:w-[54px] md:h-[54px] relative",
+                  "rounded-full",
                   "flex justify-center items-center"
                 )}
                 onClick={() => setIsSort(!isSort)}

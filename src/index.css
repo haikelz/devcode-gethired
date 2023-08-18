@@ -10,5 +10,5 @@
 
 html,
 body {
-  @apply text-[#111111];
+  @apply text-black;
 }

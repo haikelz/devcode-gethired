@@ -3,7 +3,7 @@ import { Provider } from "jotai";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import NotFoundPage from "./pages/404";
-import Details from "./pages/Details";
+import Detail from "./pages/Detail";
 import Home from "./pages/Home";
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/details/:id" element={<Details />} />
+              <Route path="/detail/:id" element={<Detail />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Layout>

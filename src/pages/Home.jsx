@@ -33,11 +33,12 @@ export default function Home() {
     "/activity-groups?email=halo@haikel.app"
   );
 
+  const queryClient = useQueryClient();
+
+  // create new activity
   async function createNewActivity(config) {
     await postData(`/activity-groups`, config);
   }
-
-  const queryClient = useQueryClient();
 
   const createNewActivityMutation = useMutation({
     mutationFn: createNewActivity,
@@ -46,15 +47,15 @@ export default function Home() {
     },
   });
 
+  // create activity
   function handleCreate() {
     createNewActivityMutation.mutate({
       title: "New Activity",
       email: "halo@haikel.app",
-      _comments:
-        "Email digunakan untuk membedakan list data yang digunakan antar aplikasi",
     });
   }
 
+  // delete activity
   async function deleteActivity() {
     await deleteData(`/activity-groups/${activityId}`);
   }
@@ -116,7 +117,11 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div data-cy="activity-empty-state">
+            <div
+              data-cy="activity-empty-state"
+              onClick={handleCreate}
+              className="cursor-pointer"
+            >
               <LazyLoadImage
                 effect="blur"
                 src="/assets/activity-empty-state.svg"

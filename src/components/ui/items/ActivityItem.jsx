@@ -8,11 +8,11 @@ import {
 } from "../../../store";
 
 export function ActivityItem({ item, index }) {
+  const { id, title, created_at } = item;
+
   const setActivityId = useSetAtom(activityIdAtom);
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
   const setActivityTitle = useSetAtom(activityTitleAtom);
-
-  const { id, title, created_at } = item;
 
   function handleClick() {
     setActivityId(id);
@@ -23,10 +23,10 @@ export function ActivityItem({ item, index }) {
   return (
     <div
       data-cy={`activity-item-${index}`}
-      className="bg-white p-5 rounded-xl w-full md:w-[235px] h-[234px] shadow-lg"
+      className="bg-white p-5 rounded-xl w-full md:w-[235px] h-[234px] drop-shadow-lg"
     >
       <div className="h-full flex justify-between flex-col items-start">
-        <Link to={`/details/${id}`}>
+        <Link to={`/detail/${id}`} className="w-full h-full">
           <h4
             data-cy="activity-item-title"
             className="text-black text-lg font-bold"
