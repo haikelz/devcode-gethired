@@ -133,7 +133,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
               >
                 PRIORITY
               </label>
-              <div className="w-[202px]">
+              <div data-cy="modal-add-priority-dropdown" className="w-[202px]">
                 <button
                   type="button"
                   aria-label="select options"

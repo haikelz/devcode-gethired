@@ -113,7 +113,12 @@ export default function Home() {
               )}
             >
               {activities.map((item, index) => (
-                <ActivityItem key={item.id} item={item} index={index} />
+                <ActivityItem
+                  data-cy={`activity-item-${index}`}
+                  key={item.id}
+                  item={item}
+                  index={index}
+                />
               ))}
             </div>
           ) : (

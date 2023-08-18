@@ -176,22 +176,27 @@ export default function Detail() {
             </div>
           </div>
           <div className="flex justify-center items-center space-x-4">
-            <div>
-              <button
-                data-cy="todo-sort-button"
-                type="button"
-                aria-label="todo sort button"
-                className={tw(
-                  "border border-[#E5E5E5] md:w-[54px] md:h-[54px] relative",
-                  "rounded-full",
-                  "flex justify-center items-center"
-                )}
-                onClick={() => setIsSort(!isSort)}
-              >
-                <LazyLoadImage src="/assets/arrow-sort.svg" alt="arrow sort" />
-              </button>
-              {isSort ? <SortDropdown /> : null}
-            </div>
+            {todos.length ? (
+              <div>
+                <button
+                  data-cy="todo-sort-button"
+                  type="button"
+                  aria-label="todo sort button"
+                  className={tw(
+                    "border border-[#E5E5E5] md:w-[54px] md:h-[54px] relative",
+                    "rounded-full",
+                    "flex justify-center items-center"
+                  )}
+                  onClick={() => setIsSort(!isSort)}
+                >
+                  <LazyLoadImage
+                    src="/assets/arrow-sort.svg"
+                    alt="arrow sort"
+                  />
+                </button>
+                {isSort ? <SortDropdown /> : null}
+              </div>
+            ) : null}
             <Button
               data-cy="todo-add-button"
               className={tw(

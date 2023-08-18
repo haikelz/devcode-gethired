@@ -4,7 +4,10 @@ import { camelCase, tw } from "../../../lib/helpers";
 export function PriorityItem({ priority, selectPriority }) {
   return (
     <>
-      <div className="flex justify-center items-center space-x-4">
+      <div
+        data-cy={`modal-add-priority-${priority}`}
+        className="flex justify-center items-center space-x-4"
+      >
         <div
           data-cy="todo-item-priority-indicator"
           className={tw(
