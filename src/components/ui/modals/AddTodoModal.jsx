@@ -29,7 +29,8 @@ export function AddTodoModal({ handleChange, handleCreate }) {
     await patchData(`/todo-items/${todoId}`, {
       activity_group_id: newTodo.activity_group_id,
       title: newTodo.title,
-      priority: selectPriority,
+      priority: selectPriority ? selectPriority : newTodo.priority,
+      is_active: newTodo.is_active,
     });
   }
 
@@ -47,11 +48,22 @@ export function AddTodoModal({ handleChange, handleCreate }) {
 
     setIsEditTodo(false);
     setIsOpenAddTodoModal(false);
-    setNewTodo({ activity_group_id: null, title: "", priority: "" });
+    setSelectPriority("");
+    setNewTodo({
+      activity_group_id: null,
+      title: "",
+      priority: "",
+      is_active: 1,
+    });
   }
 
   function handleClose() {
-    setNewTodo({ activity_group_id: null, title: "", priority: "" });
+    setNewTodo({
+      activity_group_id: null,
+      title: "",
+      priority: "",
+      is_active: 1,
+    });
     setIsOpenAddTodoModal(false);
     setSelectPriority("");
   }
@@ -77,7 +89,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
             <button
               data-cy="modal-add-close-button"
               type="button"
-              aria-label="close"
+              aria-label="modal add close button"
               onClick={handleClose}
               className="hover:bg-slate-100 p-2 rounded-md"
             >
@@ -89,6 +101,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
           <div className="pt-9 pb-4 px-6">
             <div className="flex flex-col">
               <label
+                htmlFor="modal-add-name-title"
                 data-cy="modal-add-name-title"
                 className="font-semibold text-xs"
               >
@@ -111,7 +124,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
             </div>
             <div className="flex flex-col mt-6 w-fit">
               <label
-                htmlFor="priority"
+                htmlFor="modal-add-priority-title"
                 data-cy="modal-add-priority-title"
                 className="font-semibold text-xs"
               >
@@ -139,7 +152,14 @@ export function AddTodoModal({ handleChange, handleCreate }) {
                   ) : (
                     <>
                       <span className="text-base">
-                        {isEditTodo ? newTodo.priority : "sdfsd"}
+                        {isEditTodo ? (
+                          <PriorityItem
+                            priority={newTodo.priority}
+                            selectPriority={selectPriority}
+                          />
+                        ) : (
+                          "Pilih Priority"
+                        )}
                       </span>
                       <LazyLoadImage
                         src={

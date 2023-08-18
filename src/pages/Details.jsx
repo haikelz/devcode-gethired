@@ -42,7 +42,7 @@ export default function Detail() {
 
   const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
-  const selectPriority = useAtomValue(selectPriorityAtom);
+  const [selectPriority, setSelectPriority] = useAtom(selectPriorityAtom);
 
   const { id } = useParams();
   const { data, isLoading, isError } = useFetch([id], `/activity-groups/${id}`);
@@ -72,9 +72,12 @@ export default function Detail() {
       activity_group_id: id,
       title: newTodo.title,
       priority: selectPriority,
+      _comment:
+        "List of priority is : very-high, high, normal, low, very-low | defalut value is very-high",
     });
 
     setIsOpenAddTodoModal(false);
+    setSelectPriority("");
     setNewTodo({ activity_group_id: null, title: "", priority: "" });
   }
 
@@ -178,8 +181,9 @@ export default function Detail() {
             <Button
               data-cy="todo-add-button"
               className={tw(
-                "bg-primary md:space-x-1",
-                "font-semibold flex justify-center items-center"
+                "bg-primary font-semibold",
+                "flex justify-center items-center",
+                "md:space-x-1"
               )}
               label="tambah"
               onClick={() => setIsOpenAddTodoModal(true)}

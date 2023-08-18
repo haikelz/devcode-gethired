@@ -8,7 +8,7 @@ export function SortDropdown() {
   const [sortType, setSortType] = useAtom(sortTypeAtom);
 
   return (
-    <div className="rounded-md absolute z-50 drop-shadow-lg bg-white">
+    <div className="rounded-md absolute z-50 mt-2 drop-shadow-lg bg-white">
       {sortOptions.map((item) => (
         <button
           key={item.id}

@@ -1,6 +1,7 @@
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import slugify from "slugify";
 import { sortTypeAtom } from "../../store";
 import { TodoItem } from "./items/TodoItem";
 
@@ -28,6 +29,10 @@ export function SortedTodos({ todos }) {
           if (a.title.toLowerCase() > b.title.toLowerCase()) return -1;
           if (a.title.toLowerCase() < b.title.toLowerCase()) return 1;
           return 0;
+        }
+
+        if (slugify(sortType) === "belum-selesai") {
+          return b.is_active - a.is_active;
         }
       }),
     [todos, sortType]

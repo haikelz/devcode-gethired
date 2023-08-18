@@ -30,7 +30,7 @@ export default function Home() {
 
   const { data, isLoading, isError } = useFetch(
     ["activity-groups"],
-    "/activity-groups?email=siapa@siapa.com"
+    "/activity-groups?email=halo@haikel.app"
   );
 
   async function createNewActivity(config) {
@@ -42,15 +42,16 @@ export default function Home() {
   const createNewActivityMutation = useMutation({
     mutationFn: createNewActivity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: "activity-groups" });
+      queryClient.invalidateQueries();
     },
   });
 
   function handleCreate() {
     createNewActivityMutation.mutate({
       title: "New Activity",
-      email: "siapa@siapa.com",
-      priority: "asfdasf",
+      email: "halo@haikel.app",
+      _comments:
+        "Email digunakan untuk membedakan list data yang digunakan antar aplikasi",
     });
   }
 

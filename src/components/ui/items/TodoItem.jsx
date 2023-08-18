@@ -1,5 +1,5 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
-import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { tw } from "../../../lib/helpers";
 import { getData, patchData } from "../../../lib/utils/axiosConfig";
@@ -15,8 +15,6 @@ import {
 export function TodoItem({ item }) {
   const { id, title, priority, is_active } = item;
 
-  const [isTodoDone, setIsTodoDone] = useState(false);
-
   const setTodoTitle = useSetAtom(todoTitleAtom);
   const setTodoId = useSetAtom(todoIdAtom);
   const setNewTodo = useSetAtom(newTodoAtom);
@@ -24,9 +22,22 @@ export function TodoItem({ item }) {
   const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
 
-  async function handleIsDone() {
-    await patchData(`/todo-items/${id}`, {
-      is_active: isTodoDone,
+  const queryClient = useQueryClient();
+
+  async function editTodoPriority(config) {
+    await patchData(`/todo-items/${id}`, config);
+  }
+
+  const editTodoPriorityMutation = useMutation({
+    mutationFn: editTodoPriority,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: id });
+    },
+  });
+
+  function handleEditTodoPriority(value) {
+    editTodoPriorityMutation.mutate({
+      is_active: value,
     });
   }
 
@@ -45,8 +56,6 @@ export function TodoItem({ item }) {
     setIsEditTodo(true);
   }
 
-  console.log(is_active);
-  console.log(isTodoDone);
   return (
     <div className="w-full">
       <div className="bg-white drop-shadow-lg rounded-xl p-7">
@@ -57,11 +66,14 @@ export function TodoItem({ item }) {
               type="checkbox"
               name="priority"
               onChange={(e) => {
-                setIsTodoDone(!isTodoDone);
-                handleIsDone();
+                handleEditTodoPriority(!e.target.checked);
               }}
-              defaultChecked={!is_active}
-              className="bg-red-100 border-red-300 text-red-500 focus:ring-red-200"
+              checked={!is_active}
+              className={tw(
+                "bg-red-100 cursor-pointer",
+                "border-red-300 text-red-500",
+                "focus:ring-red-200"
+              )}
             />
             <div
               data-cy="todo-item-priority-indicator"
@@ -82,7 +94,7 @@ export function TodoItem({ item }) {
               data-cy="todo-item-title"
               className={tw(
                 "text-lg font-medium",
-                isTodoDone || !is_active ? "line-through text-gray" : ""
+                !is_active ? "line-through text-gray" : ""
               )}
             >
               {title}
@@ -93,11 +105,7 @@ export function TodoItem({ item }) {
               aria-label="todo item edit button"
               onClick={handleClick}
             >
-              <LazyLoadImage
-                effect="blur"
-                src="/assets/pencil.svg"
-                alt="todo item edit"
-              />
+              <LazyLoadImage src="/assets/pencil.svg" alt="todo item edit" />
             </button>
           </div>
           <button
@@ -106,7 +114,7 @@ export function TodoItem({ item }) {
             aria-label="todo item delete button"
             onClick={() => handleDelete(id)}
           >
-            <LazyLoadImage effect="blur" src="/assets/trash.svg" alt="trash" />
+            <LazyLoadImage src="/assets/trash.svg" alt="trash" />
           </button>
         </div>
       </div>

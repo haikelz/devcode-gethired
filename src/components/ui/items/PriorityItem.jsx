@@ -1,5 +1,5 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { tw } from "../../../lib/helpers";
+import { camelCase, tw } from "../../../lib/helpers";
 
 export function PriorityItem({ priority, selectPriority }) {
   return (
@@ -22,11 +22,7 @@ export function PriorityItem({ priority, selectPriority }) {
         ></div>
         <span>
           {priority === "very-high"
-            ? priority
-                .replace(/[^A-Za-z0-9 ]/gi, " ")
-                .split(" ")
-                .map((item) => item[0].toUpperCase() + item.slice(1))
-                .join(" ")
+            ? camelCase(priority)
             : priority[0].toUpperCase() + priority.slice(1)}
         </span>
       </div>
