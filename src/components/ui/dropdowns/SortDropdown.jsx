@@ -8,11 +8,14 @@ export function SortDropdown() {
   const [sortType, setSortType] = useAtom(sortTypeAtom);
 
   return (
-    <div className="rounded-md absolute z-50 mt-2 drop-shadow-lg bg-white">
+    <div
+      data-cy="sort-parent"
+      className="rounded-md absolute z-50 mt-2 drop-shadow-lg bg-white"
+    >
       {sortOptions.map((item) => (
         <button
           key={item.id}
-          data-cy={item.cy}
+          data-cy="sort-selection"
           type="button"
           aria-label={item.name}
           className={tw(

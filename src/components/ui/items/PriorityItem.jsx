@@ -5,11 +5,10 @@ export function PriorityItem({ priority, selectPriority }) {
   return (
     <>
       <div
-        data-cy={`modal-add-priority-${priority}`}
+        data-cy="modal-add-priority-item"
         className="flex justify-center items-center space-x-4"
       >
         <div
-          data-cy="todo-item-priority-indicator"
           className={tw(
             "w-3 h-3 rounded-full",
             priority === "very-high"
