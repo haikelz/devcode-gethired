@@ -122,10 +122,6 @@ export default function Detail() {
 
     setIsOpenDeleteModal(false);
     setIsDelete(true);
-
-    setTimeout(() => {
-      setIsDelete(false);
-    }, 1500);
   }
 
   if (isLoading) return <Loading />;
@@ -168,6 +164,10 @@ export default function Detail() {
                 <h1
                   data-cy="todo-title"
                   className="font-bold text-xl md:text-3xl"
+                  onClick={() => {
+                    setIsEditActivityTitle(!isEditActivityTitle);
+                    inputRef.current?.focus();
+                  }}
                 >
                   {data.title}
                 </h1>

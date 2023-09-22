@@ -91,6 +91,7 @@ export function AddTodoModal({ handleChange, handleCreate }) {
         )}
       >
         <div
+          data-cy="modal-add"
           ref={openRef}
           className="bg-white drop-shadow-lg w-full sm:w-[830px] rounded-xl"
         >
