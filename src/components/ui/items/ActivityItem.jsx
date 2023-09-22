@@ -7,7 +7,7 @@ import {
   isOpenDeleteModalAtom,
 } from "../../../store";
 
-export function ActivityItem({ item }) {
+export function ActivityItem({ item, ...props }) {
   const { id, title, created_at } = item;
 
   const setActivityId = useSetAtom(activityIdAtom);
@@ -21,7 +21,10 @@ export function ActivityItem({ item }) {
   }
 
   return (
-    <div className="bg-white p-5 rounded-xl w-full md:w-[235px] h-[234px] drop-shadow-lg">
+    <div
+      className="bg-white p-5 rounded-xl w-full md:w-[235px] h-[234px] drop-shadow-lg"
+      {...props}
+    >
       <div className="h-full flex justify-between flex-col items-start">
         <Link to={`/detail/${id}`} className="w-full h-full">
           <h4

@@ -5,7 +5,7 @@ import { tw } from "../../../lib/helpers";
 import { getData, patchData } from "../../../lib/utils/axiosConfig";
 import {
   isEditTodoAtom,
-  isOpenAddModalAtom,
+  isOpenAddTodoModalAtom,
   isOpenDeleteModalAtom,
   newTodoAtom,
   todoIdAtom,
@@ -19,7 +19,7 @@ export function TodoItem({ item }) {
   const setTodoId = useSetAtom(todoIdAtom);
   const setNewTodo = useSetAtom(newTodoAtom);
   const setIsEditTodo = useSetAtom(isEditTodoAtom);
-  const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
+  const setIsOpenAddTodoModal = useSetAtom(isOpenAddTodoModalAtom);
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
 
   const queryClient = useQueryClient();

@@ -9,7 +9,8 @@ export const newTodoAtom = atom({
   is_active: 1,
 });
 
-export const isOpenAddModalAtom = atom(false);
+export const isOpenInformationModalAtom = atom(false);
+export const isOpenAddTodoModalAtom = atom(false);
 export const isOpenDeleteModalAtom = atom(false);
 export const isSortAtom = atom(false);
 export const isEditTodoAtom = atom(false);

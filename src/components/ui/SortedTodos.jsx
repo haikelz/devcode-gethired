@@ -2,13 +2,13 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import slugify from "slugify";
-import { isOpenAddModalAtom, sortTypeAtom } from "../../store";
+import { isOpenAddTodoModalAtom, sortTypeAtom } from "../../store";
 import { TodoItem } from "./items/TodoItem";
 
 export function SortedTodos({ todos }) {
   const sortType = useAtomValue(sortTypeAtom);
 
-  const setIsOpenAddTodoModal = useSetAtom(isOpenAddModalAtom);
+  const setIsOpenAddTodoModal = useSetAtom(isOpenAddTodoModalAtom);
 
   const sortedTodos = useMemo(
     () =>

@@ -1,11 +1,17 @@
 import { useSetAtom } from "jotai";
+import { useRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useClickOutside } from "../../../hooks/useClickOutside";
+import { tw } from "../../../lib/helpers";
 import { isOpenDeleteModalAtom } from "../../../store";
 import { Button } from "../Button";
-import { tw } from "../../../lib/helpers";
 
 export function ConfirmDeleteModal({ title, deleteFunc }) {
   const setIsOpenDeleteModal = useSetAtom(isOpenDeleteModalAtom);
+
+  const openRef = useRef(null);
+
+  useClickOutside(setIsOpenDeleteModal, openRef);
 
   return (
     <div
@@ -15,7 +21,10 @@ export function ConfirmDeleteModal({ title, deleteFunc }) {
         "flex inset-0 justify-center items-center min-h-screen"
       )}
     >
-      <div className="flex text-center bg-white rounded-xl p-10 justify-center items-center flex-col">
+      <div
+        ref={openRef}
+        className="flex text-center bg-white rounded-xl p-10 justify-center items-center flex-col"
+      >
         <LazyLoadImage
           data-cy="modal-delete-icon"
           src="/assets/warning.svg"

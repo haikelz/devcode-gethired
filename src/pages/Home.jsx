@@ -17,6 +17,7 @@ import {
   activityTitleAtom,
   isDeleteAtom,
   isOpenDeleteModalAtom,
+  isOpenInformationModalAtom,
 } from "../store";
 
 export default function Home() {
@@ -27,6 +28,9 @@ export default function Home() {
 
   const activityId = useAtomValue(activityIdAtom);
   const activityTitle = useAtomValue(activityTitleAtom);
+  const [isOpenInformationModal, setIsOpenInformationModal] = useAtom(
+    isOpenInformationModalAtom
+  );
 
   const { data, isLoading, isError } = useFetch(
     ["activity-groups"],
@@ -71,10 +75,7 @@ export default function Home() {
     deleteActivityMutation.mutate(activityId);
 
     setIsOpenDeleteModal(false);
-    setIsDelete(true);
-    setTimeout(() => {
-      setIsDelete(false);
-    }, 1500);
+    setIsOpenInformationModal(true);
   }
 
   if (isLoading) return <Loading />;
@@ -138,7 +139,7 @@ export default function Home() {
       {isOpenDeleteModal ? (
         <ConfirmDeleteModal title={activityTitle} deleteFunc={handleDelete} />
       ) : null}
-      {isDelete ? <InformationModal /> : null}
+      {isOpenInformationModal ? <InformationModal /> : null}
     </>
   );
 }

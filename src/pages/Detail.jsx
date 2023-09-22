@@ -18,7 +18,7 @@ import { tw } from "../lib/helpers";
 import { deleteData, patchData, postData } from "../lib/utils/axiosConfig";
 import {
   isDeleteAtom,
-  isOpenAddModalAtom,
+  isOpenAddTodoModalAtom,
   isOpenDeleteModalAtom,
   isSortAtom,
   newTodoAtom,
@@ -31,7 +31,6 @@ export default function Detail() {
   const { id } = useParams();
 
   const [isEditActivityTitle, setIsEditActivityTitle] = useState(false);
-
   const [newTodo, setNewTodo] = useAtom(newTodoAtom);
   const [isSort, setIsSort] = useAtom(isSortAtom);
   const [isDelete, setIsDelete] = useAtom(isDeleteAtom);
@@ -39,10 +38,12 @@ export default function Detail() {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useAtom(
     isOpenDeleteModalAtom
   );
-  const [isOpenAddTodoModal, setIsOpenAddTodoModal] =
-    useAtom(isOpenAddModalAtom);
+  const [isOpenAddTodoModal, setIsOpenAddTodoModal] = useAtom(
+    isOpenAddTodoModalAtom
+  );
 
   const inputRef = useRef(null);
+  const openRef = useRef(null);
 
   const todoId = useAtomValue(todoIdAtom);
   const todoTitle = useAtomValue(todoTitleAtom);
@@ -146,7 +147,10 @@ export default function Detail() {
                 <LazyLoadImage src="/assets/arrow-left.svg" alt="arrow left" />
               </button>
             </Link>
-            <div className="flex justify-center items-center ml-5">
+            <div
+              ref={openRef}
+              className="flex justify-center items-center ml-5"
+            >
               {isEditActivityTitle ? (
                 <input
                   data-cy="todo-title"
