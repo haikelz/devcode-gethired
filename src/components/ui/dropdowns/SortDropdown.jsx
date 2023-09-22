@@ -23,7 +23,7 @@ export function SortDropdown() {
             "border-b-2 border-[#E5E5E5] py-4 px-6",
             "transition-all hover:bg-secondary"
           )}
-          onClick={() => setSortType(item.name.toLowerCase())}
+          onClick={() => setSortType(item.name)}
         >
           <div className="flex justify-center items-center space-x-4">
             <LazyLoadImage src={item.icon} alt={item.name} />

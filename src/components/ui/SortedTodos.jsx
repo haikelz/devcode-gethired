@@ -13,27 +13,27 @@ export function SortedTodos({ todos }) {
   const sortedTodos = useMemo(
     () =>
       [...todos].sort((a, b) => {
-        if (sortType === "terbaru") return a - b;
+        if (sortType === "Terbaru") return a - b;
 
-        if (sortType === "terlama") {
+        if (sortType === "Terlama") {
           if (a.id > b.id) return 1;
           if (a.id < b.id) return -1;
           return 0;
         }
 
-        if (sortType === "a-z") {
+        if (sortType === "A-Z") {
           if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
           if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
           return 0;
         }
 
-        if (sortType === "z-a") {
+        if (sortType === "Z-A") {
           if (a.title.toLowerCase() > b.title.toLowerCase()) return -1;
           if (a.title.toLowerCase() < b.title.toLowerCase()) return 1;
           return 0;
         }
 
-        if (slugify(sortType) === "belum-selesai") {
+        if (sortType === "Belum Selesai") {
           return b.is_active - a.is_active;
         }
       }),
